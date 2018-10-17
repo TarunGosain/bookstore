@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>bookstorelogs/bookstore_log.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>bookstorelogs/bookstore_log.%i.log</fileNamePattern>
+            <!-- <rollingOnExit>true</rollingOnExit> -->
+            <MinIndex>1</MinIndex>
+				<MaxIndex>10</MaxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5KB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!-- config for STDOUT and SAVE-TO-FILE -->
+    <springProfile name="local">
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SAVE-TO-FILE" />
+        </root>
+        <logger name="com.netent.bookstore" additivity="false" level="debug">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+    </springProfile>
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SAVE-TO-FILE" />
+        </root>
+        <logger name="com.netent.bookstore" additivity="false" level="debug">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+    </springProfile>
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="SAVE-TO-FILE" />
+        </root>
+        <logger name="com.netent.bookstore" additivity="false" level="error">
+            <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+    </springProfile>
+
+</configuration>
